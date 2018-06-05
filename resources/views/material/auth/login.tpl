@@ -338,7 +338,8 @@
     <script>
         $(document).ready(function () {
             var el = document.createElement('script');
-            document.getElementById('telegram-login-box').append(el);
+            var Miku = document.getElementById('telegram-login-box');
+            Miku.appendChild(el);
             el.onload = function () {
                 $('#telegram-alert').remove()
             }
