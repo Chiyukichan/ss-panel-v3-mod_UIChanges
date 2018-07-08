@@ -53,8 +53,14 @@ class AdminController extends UserController
 
     public function addInvite($request, $response, $args)
     {
-        $n = $request->getParam('num');
+        $num = $request->getParam('num');
         $prefix = $request->getParam('prefix');
+
+		if(Tools::isInt($num)==false){
+		    $res['ret'] = 0;
+            $res['msg'] = "非法请求";
+            return $response->getBody()->write(json_encode($res));
+		}
 
         if ($request->getParam('uid')!="0") {
             if (strpos($request->getParam('uid'), "@")!=false) {
@@ -65,27 +71,17 @@ class AdminController extends UserController
 
             if ($user==null) {
                 $res['ret'] = 0;
-                $res['msg'] = "输入不正确";
+                $res['msg'] = "邀请次数添加失败，检查用户id或者用户邮箱是否输入正确";
                 return $response->getBody()->write(json_encode($res));
             }
             $uid = $user->id;
         } else {
             $uid=0;
         }
-
-        if ($n < 1) {
-            $res['ret'] = 0;
-            return $response->getBody()->write(json_encode($res));
-        }
-        for ($i = 0; $i < $n; $i++) {
-            $char = Tools::genRandomChar(32);
-            $code = new InviteCode();
-            $code->code = $prefix . $char;
-            $code->user_id = $uid;
-            $code->save();
-        }
+		$user->invite_num += $num;
+		$user->save();
         $res['ret'] = 1;
-        $res['msg'] = "邀请码添加成功";
+        $res['msg'] = "邀请次数添加成功";
         return $response->getBody()->write(json_encode($res));
     }
 

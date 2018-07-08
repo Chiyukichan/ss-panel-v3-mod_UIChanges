@@ -54,7 +54,7 @@ $container['notAllowedHandler'] = function ($c) {
     };
 };
 
-if ($debug==false) {
+if ($debug == false) {
     $container['errorHandler'] = function ($c) {
         return function ($request, $response, $exception) use ($c) {
             return $response->withAddedHeader('Location', '/500');
@@ -72,16 +72,17 @@ $app->get('/404', 'App\Controllers\HomeController:page404');
 $app->get('/405', 'App\Controllers\HomeController:page405');
 $app->get('/500', 'App\Controllers\HomeController:page500');
 $app->get('/pwm_pingback', 'App\Controllers\HomeController:pay_callback');
+$app->post('/notify', 'App\Controllers\HomeController:notify');
 $app->post('/alipay_callback', 'App\Controllers\HomeController:pay_callback');
-$app->post('/pay_callback', 'App\Controllers\HomeController:pay_callback');
+$app->post('/pay_callback', 'App\Controllers\HomeController:f2fpay_pay_callback');
 $app->get('/pay_callback', 'App\Controllers\HomeController:pay_callback');
-$app->get('/code', 'App\Controllers\HomeController:code');
 $app->get('/tos', 'App\Controllers\HomeController:tos');
 $app->get('/staff', 'App\Controllers\HomeController:staff');
 $app->get('/gfwlistjs', 'App\Controllers\LinkController:GetGfwlistJs');
 $app->post('/telegram_callback', 'App\Controllers\HomeController:telegram');
-$app->get('/yft/notify','App\Controllers\YFTPayCallBackController:yft_notify');
-
+$app->get('/yft/notify', 'App\Controllers\YFTPayCallBackController:yft_notify');
+$app->get('/codepay_callback', 'App\Controllers\HomeController:codepay_callback');
+$app->post('/codepay_callback', 'App\Controllers\HomeController:codepay_pay_callback');
 
 
 // User Center
@@ -121,8 +122,9 @@ $app->group('/user', function () {
     $this->post('/ticket', 'App\Controllers\UserController:ticket_add');
     $this->get('/ticket/{id}/view', 'App\Controllers\UserController:ticket_view');
     $this->put('/ticket/{id}', 'App\Controllers\UserController:ticket_update');
-
+	
     $this->post('/invite', 'App\Controllers\UserController:doInvite');
+    $this->post('/buy_invite', 'App\Controllers\UserController:buyInvite');
     $this->get('/edit', 'App\Controllers\UserController:edit');
     $this->post('/password', 'App\Controllers\UserController:updatePassword');
     $this->post('/wechat', 'App\Controllers\UserController:updateWechat');
@@ -137,16 +139,18 @@ $app->group('/user', function () {
     $this->get('/kill', 'App\Controllers\UserController:kill');
     $this->post('/kill', 'App\Controllers\UserController:handleKill');
     $this->get('/logout', 'App\Controllers\UserController:logout');
+    $this->get('/backtoadmin', 'App\Controllers\UserController:backtoadmin');
     $this->get('/code', 'App\Controllers\UserController:code');
-	//易付通路由定义 start
+    //易付通路由定义 start
     $this->post('/code/yft/pay', 'App\Controllers\YftPay:yftPay');
     $this->get('/code/yft/pay/result', 'App\Controllers\YftPay:yftPayResult');
     $this->post('/code/yft', 'App\Controllers\YftPay:yft');
-    $this->get('/yftOrder','App\Controllers\YftPay:yftOrder');
-	//易付通路由定义 end
+    $this->get('/yftOrder', 'App\Controllers\YftPay:yftOrder');
+    //易付通路由定义 end
     $this->get('/alipay', 'App\Controllers\UserController:alipay');
     $this->post('/code/f2fpay', 'App\Controllers\UserController:f2fpay');
     $this->get('/code/f2fpay', 'App\Controllers\UserController:f2fpayget');
+    $this->get('/code/codepay', 'App\Controllers\UserController:codepay');
     $this->get('/code_check', 'App\Controllers\UserController:code_check');
     $this->post('/code', 'App\Controllers\UserController:codepost');
     $this->post('/gacheck', 'App\Controllers\UserController:GaCheck');
@@ -154,6 +158,7 @@ $app->group('/user', function () {
     $this->get('/gareset', 'App\Controllers\UserController:GaReset');
     $this->get('/telegram_reset', 'App\Controllers\UserController:telegram_reset');
     $this->post('/resetport', 'App\Controllers\UserController:ResetPort');
+    $this->post('/specifyport', 'App\Controllers\UserController:SpecifyPort');
     $this->post('/pacset', 'App\Controllers\UserController:PacSet');
     $this->get('/getpcconf', 'App\Controllers\UserController:GetPcConf');
     $this->get('/getiosconf', 'App\Controllers\UserController:GetIosConf');
@@ -174,6 +179,7 @@ $app->group('/auth', function () {
     $this->post('/register', 'App\Controllers\AuthController:registerHandle');
     $this->post('/send', 'App\Controllers\AuthController:sendVerify');
     $this->get('/logout', 'App\Controllers\AuthController:logout');
+    $this->get('/telegram_oauth', 'App\Controllers\AuthController:telegram_oauth');
 })->add(new Guest());
 
 // Password
@@ -280,6 +286,7 @@ $app->group('/admin', function () {
     $this->get('/user/{id}/edit', 'App\Controllers\Admin\UserController:edit');
     $this->put('/user/{id}', 'App\Controllers\Admin\UserController:update');
     $this->delete('/user', 'App\Controllers\Admin\UserController:delete');
+    $this->post('/user/changetouser', 'App\Controllers\Admin\UserController:changetouser');
     $this->get('/user/ajax', 'App\Controllers\Admin\UserController:ajax');
 
 
@@ -293,7 +300,7 @@ $app->group('/admin', function () {
     $this->get('/sys', 'App\Controllers\AdminController:sys');
     $this->get('/logout', 'App\Controllers\AdminController:logout');
     $this->post('/payback/ajax', 'App\Controllers\AdminController:ajax_payback');
-	$this->get('/yftOrder','App\Controllers\YftPay:yftOrderForAdmin');
+    $this->get('/yftOrder', 'App\Controllers\YftPay:yftOrderForAdmin');
 })->add(new Admin());
 
 // API
@@ -302,6 +309,7 @@ $app->group('/api', function () {
     $this->post('/token', 'App\Controllers\ApiController:newToken');
     $this->get('/node', 'App\Controllers\ApiController:node')->add(new Api());
     $this->get('/user/{id}', 'App\Controllers\ApiController:userInfo')->add(new Api());
+    $this->get('/sublink','App\Controllers\Client\ClientApiController:GetSubLink');
 });
 
 // mu
@@ -346,15 +354,14 @@ $app->group('/link', function () {
     $this->get('/{token}', 'App\Controllers\LinkController:GetContent');
 });
 
-$app->group('/user',function(){
-    $this->post("/doiam","App\Utils\DoiAMPay:handle");
+$app->group('/user', function () {
+    $this->post("/doiam", "App\Utils\DoiAMPay:handle");
 })->add(new Auth());
-$app->group("/doiam",function(){
-    $this->post("/callback/{type}","App\Utils\DoiAMPay:handle_callback");
-    $this->get("/return/alipay","App\Utils\DoiAMPay:handle_return");
-    $this->post("/status","App\Utils\DoiAMPay:status");
+$app->group("/doiam", function () {
+    $this->post("/callback/{type}", "App\Utils\DoiAMPay:handle_callback");
+    $this->get("/return/alipay", "App\Utils\DoiAMPay:handle_return");
+    $this->post("/status", "App\Utils\DoiAMPay:status");
 });
-
 
 
 // Run Slim Routes for App

@@ -4,6 +4,9 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
+{if $config['appName'] == '跑路'}
+<script>window.location.href='{$config["baseUrl"]}/paolu.html';</script>
+{/if}
 <html>
 	<head>
 		<title>{$config["appName"]}</title>
@@ -13,8 +16,8 @@
         <link rel="shortcut icon" href="/favicon.ico"/>
         <link rel="bookmark" href="/favicon.ico"/>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-		<link rel="stylesheet" href="assets/css/main.css"/>
-        <noscript><link rel="stylesheet" href="./assets/css/noscript.css" /></noscript>   
+		<link rel="stylesheet" href="/assets/css/main.css"/>
+        <noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>   
   </head>
   
        <body>
@@ -47,6 +50,7 @@
 							<ul>
                                 <li><a href="#1">简介</a></li>
 					            <li><a href="/user">用户中心</a></li>
+								<li><a href="/user/logout">退出登录</a></li>
 								<li><a href="#5">下载</a></li>
                         </ul>
 						</nav>
@@ -54,7 +58,11 @@
                               <div class="content">
 							<div class="inner">
 								<h1>{$config["appName"]}</h1>
-								<p>请问您今天要来点兔子吗？</p>
+								<!--
+								如果想自定义文本请删除下面这段script代码,格式为
+								<p>自定义文本</p>
+								-->
+								<script type="text/javascript" src="https://api.lwl12.com/hitokoto/main/get?encode=js&charset=utf-8"></script><div id="lwlhitokoto"><script>lwlhitokoto()</script></div>
                           </div>
                       </div>	
                               <nav>
@@ -62,8 +70,7 @@
                                <li><a href="#1">简介</a></li>
 								<li><a href="/auth/login">登录</a></li>
 								<li><a href="/auth/register">注册</a></li>
-                              	<li><a href="#4">联系</a></li>
-								<li><a href="#5">下載</a></li>
+                              	<li><a href="#5">下载</a></li>
                               
                            </ul>
 						</nav>
@@ -75,8 +82,12 @@
                       <!--标签1开始-->
                       <article id="1">
                       <h2 class="major">简介</h2>
-                      <p>这里是示范文字</p><p> 请到站点文件夹</p><p>resources/views/material/index.tpl</p><p>第79行进行修改</p></article>
-					  <!--   简介修改示例: <p> 123</p>  一个  <p> 123</p>  为一行，请不要删除 </article>-->
+                      <p>「ホワイトアルバムの季節」が、また、やってきた。</p></article>
+					  <!--
+					  简介修改示例: 
+					  <p> 123</p>
+					  一个  <p> 123</p>  为一行，请不要删除 </article>
+					  -->
                      <!--标签4开始-->
                       <article id="4">
 								<h2 class="major">联系我们</h2>
@@ -92,7 +103,7 @@
                                   </article>
                       <!--标签5开始-->
 	                        <article id="5">
-							<h2 class="major">软件下載</h2>
+							<h2 class="major">软件下载</h2>
 							<ul>
 							  <li><a href="/ssr-download/ssr-win.7z" class="icon fa-windows"><span class="label"></span> Windows</a></li>
 							  <li><a href="/ssr-download/ssr-mac.dmg" class="icon fa-apple"><span class="label">Mac</span> Mac</a></li>
@@ -140,16 +151,16 @@
                               </div>
                      <!-- 版权底部 -->
                       <footer id="footer">
-                   <p class="copyright">&copy;2015-2017 {$config["appName"]}</p>
+                   <p class="copyright">&copy;2015-{date("Y")} {$config["appName"]}</p>
                       </footer>
               <!-- 版权结束 -->
 			 </div>
                 <!-- BG -->
 			<div id="bg"></div>
 	        	<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-         <script src="assets/js/main.js"></script>
+			<script src="/assets/js/jquery.min.js"></script>
+			<script src="/assets/js/skel.min.js"></script>
+			<script src="/assets/js/util.js"></script>
+         <script src="/assets/js/main.js"></script>
 	</body>
 </html>
