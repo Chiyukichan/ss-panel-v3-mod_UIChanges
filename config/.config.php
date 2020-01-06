@@ -16,14 +16,14 @@ flag_regex在最近的版本中使用了新的值，依然是匹配 国旗名+�
 //基础设置，正确填写以下内容你的网站就能使用了-----------------------------------------------------------------------
 $System_Config['key'] = '1145141919810';			// !!! 瞎 jb 修改此key为随机字符串确保网站安全 !!!
 $System_Config['debug'] =  'false';  //  正式环境请确保为 false
-$System_Config['appName'] = 'SPhard | 刘伟';             //站点名称
+$System_Config['appName'] = '一哩酸酸乳';             //站点名称
 $System_Config['baseUrl'] = 'http://url.com';            // 站点地址
-$System_Config['muKey'] = 'NimaQu';   // mu key 用于校验ss-go mu的请求
+$System_Config['muKey'] = '68684621';   // mu key 用于校验ss-go mu的请求
 $System_Config['db_driver'] = 'mysql';		//数据库程序
 $System_Config['db_host'] = 'localhost'; //数据库地址
-$System_Config['db_database'] = 'sspanel';			//数据库名
-$System_Config['db_username'] = 'root';		//数据库用户名
-$System_Config['db_password'] = 'sspanel';			//用户名对应的密码
+$System_Config['db_database'] = 'ssr';			//数据库名
+$System_Config['db_username'] = 'ssr';		//数据库用户名
+$System_Config['db_password'] = '68684621';			//用户名对应的密码
 
 
 //------------------------------以下为自定义设置，请按个人需求填写--------------------------------------------
